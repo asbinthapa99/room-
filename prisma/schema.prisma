@@ -1,0 +1,127 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  name      String?
+  avatar    String?
+  role      Role     @default(RENTER)
+  banned    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listings         Listing[]
+  savedListings    SavedListing[]
+  sentMessages     Message[]     @relation("SentMessages")
+  receivedMessages Message[]     @relation("ReceivedMessages")
+  reports          Report[]
+
+  @@map("users")
+}
+
+model Listing {
+  id            String     @id @default(cuid())
+  title         String
+  description   String
+  price         Float
+  currency      String     @default("GBP")
+  city          String
+  country       String
+  address       String?
+  roomType      RoomType
+  billsIncluded Boolean    @default(false)
+  availableDate DateTime
+  genderPref    GenderPref @default(ANY)
+  images        String[]
+  approved      Boolean    @default(false)
+  rented        Boolean    @default(false)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  landlord   User   @relation(fields: [landlordId], references: [id], onDelete: Cascade)
+  landlordId String
+
+  savedBy  SavedListing[]
+  messages Message[]
+  reports  Report[]
+
+  @@map("listings")
+}
+
+model SavedListing {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  listing   Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listingId String
+
+  @@unique([userId, listingId])
+  @@map("saved_listings")
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  sender     User    @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  senderId   String
+  receiver   User    @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  receiverId String
+  listing    Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listingId  String
+
+  @@map("messages")
+}
+
+model Report {
+  id        String       @id @default(cuid())
+  reason    ReportReason
+  details   String?
+  resolved  Boolean      @default(false)
+  createdAt DateTime     @default(now())
+
+  reporter   User    @relation(fields: [reporterId], references: [id], onDelete: Cascade)
+  reporterId String
+  listing    Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  listingId  String
+
+  @@map("reports")
+}
+
+enum Role {
+  RENTER
+  LANDLORD
+  ADMIN
+}
+
+enum RoomType {
+  PRIVATE
+  SHARED
+}
+
+enum GenderPref {
+  MALE
+  FEMALE
+  ANY
+}
+
+enum ReportReason {
+  FAKE_LISTING
+  SUSPICIOUS_LANDLORD
+  SPAM
+  INAPPROPRIATE_CONTENT
+  OTHER
+}
