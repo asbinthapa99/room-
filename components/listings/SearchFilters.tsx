@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Search, SlidersHorizontal } from "lucide-react";
 import { CITIES, COUNTRIES, ROOM_TYPES } from "@/lib/utils";
 
@@ -9,13 +9,31 @@ export function SearchFilters() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const updateParam = useCallback(
-    (key: string, value: string) => {
+  const [q, setQ] = useState(searchParams.get("q") ?? "");
+  const [country, setCountry] = useState(searchParams.get("country") ?? "");
+  const [city, setCity] = useState(searchParams.get("city") ?? "");
+  const [roomType, setRoomType] = useState(searchParams.get("roomType") ?? "");
+  const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") ?? "");
+  const [availableFrom, setAvailableFrom] = useState(searchParams.get("availableFrom") ?? "");
+  const [billsIncluded, setBillsIncluded] = useState(searchParams.get("billsIncluded") === "true");
+
+  // Sync state when URL params change (e.g. navigating from homepage search)
+  useEffect(() => {
+    setQ(searchParams.get("q") ?? "");
+    setCountry(searchParams.get("country") ?? "");
+    setCity(searchParams.get("city") ?? "");
+    setRoomType(searchParams.get("roomType") ?? "");
+    setMaxPrice(searchParams.get("maxPrice") ?? "");
+    setAvailableFrom(searchParams.get("availableFrom") ?? "");
+    setBillsIncluded(searchParams.get("billsIncluded") === "true");
+  }, [searchParams]);
+
+  const push = useCallback(
+    (updates: Record<string, string>) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (value) {
-        params.set(key, value);
-      } else {
-        params.delete(key);
+      for (const [key, value] of Object.entries(updates)) {
+        if (value) params.set(key, value);
+        else params.delete(key);
       }
       params.delete("page");
       router.push(`/listings?${params.toString()}`);
@@ -33,16 +51,16 @@ export function SearchFilters() {
             <input
               type="text"
               placeholder="Search listings..."
-              defaultValue={searchParams.get("q") ?? ""}
-              onChange={(e) => updateParam("q", e.target.value)}
+              value={q}
+              onChange={(e) => { setQ(e.target.value); push({ q: e.target.value }); }}
               className="input-field pl-9"
             />
           </div>
 
           {/* Country */}
           <select
-            defaultValue={searchParams.get("country") ?? ""}
-            onChange={(e) => updateParam("country", e.target.value)}
+            value={country}
+            onChange={(e) => { setCountry(e.target.value); push({ country: e.target.value }); }}
             className="input-field w-auto"
           >
             <option value="">All Countries</option>
@@ -53,8 +71,8 @@ export function SearchFilters() {
 
           {/* City */}
           <select
-            defaultValue={searchParams.get("city") ?? ""}
-            onChange={(e) => updateParam("city", e.target.value)}
+            value={city}
+            onChange={(e) => { setCity(e.target.value); push({ city: e.target.value }); }}
             className="input-field w-auto"
           >
             <option value="">All Cities</option>
@@ -65,8 +83,8 @@ export function SearchFilters() {
 
           {/* Room type */}
           <select
-            defaultValue={searchParams.get("roomType") ?? ""}
-            onChange={(e) => updateParam("roomType", e.target.value)}
+            value={roomType}
+            onChange={(e) => { setRoomType(e.target.value); push({ roomType: e.target.value }); }}
             className="input-field w-auto"
           >
             <option value="">Any Room Type</option>
@@ -81,8 +99,8 @@ export function SearchFilters() {
             <input
               type="number"
               placeholder="Max budget"
-              defaultValue={searchParams.get("maxPrice") ?? ""}
-              onChange={(e) => updateParam("maxPrice", e.target.value)}
+              value={maxPrice}
+              onChange={(e) => { setMaxPrice(e.target.value); push({ maxPrice: e.target.value }); }}
               className="input-field w-28"
               min={0}
             />
@@ -91,8 +109,8 @@ export function SearchFilters() {
           {/* Move-in date */}
           <input
             type="date"
-            defaultValue={searchParams.get("availableFrom") ?? ""}
-            onChange={(e) => updateParam("availableFrom", e.target.value)}
+            value={availableFrom}
+            onChange={(e) => { setAvailableFrom(e.target.value); push({ availableFrom: e.target.value }); }}
             className="input-field w-auto"
           />
 
@@ -100,8 +118,8 @@ export function SearchFilters() {
           <label className="flex items-center gap-2 cursor-pointer">
             <input
               type="checkbox"
-              defaultChecked={searchParams.get("billsIncluded") === "true"}
-              onChange={(e) => updateParam("billsIncluded", e.target.checked ? "true" : "")}
+              checked={billsIncluded}
+              onChange={(e) => { setBillsIncluded(e.target.checked); push({ billsIncluded: e.target.checked ? "true" : "" }); }}
               className="h-4 w-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500"
             />
             <span className="text-sm text-gray-700">Bills included</span>
