@@ -1,17 +1,79 @@
 import { SignUp } from "@clerk/nextjs";
-import { Home } from "lucide-react";
+import { Home, Shield, Star } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
+import { isClerkConfigured } from "@/lib/clerk-config";
 
 export default function SignUpPage() {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-blue-700 flex flex-col items-center justify-center p-4">
-      <Link href="/" className="flex items-center gap-2 mb-8">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 backdrop-blur border border-white/20">
-          <Home className="h-4 w-4 text-white" />
+  if (!isClerkConfigured) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 text-center">
+        <Link href="/" className="flex items-center gap-2.5 mb-8">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
+            <Home className="h-4 w-4 text-white" />
+          </div>
+          <span className="text-lg font-bold text-gray-900">NestMate</span>
+        </Link>
+        <div className="w-full max-w-sm card p-6">
+          <h1 className="text-lg font-semibold text-gray-900">Auth not configured</h1>
+          <p className="mt-2 text-sm text-gray-500">
+            Add valid Clerk keys to .env.local to enable authentication.
+          </p>
+          <Link href="/" className="btn-secondary w-full justify-center mt-4">Go home</Link>
         </div>
-        <span className="text-lg font-bold text-white">RoomRent</span>
-      </Link>
-      <div className="glass-card w-full max-w-sm overflow-visible shadow-2xl">
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Left panel */}
+      <div className="hidden lg:flex lg:w-1/2 relative flex-col bg-gray-900 p-10">
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=900&q=80"
+            alt="Room interior"
+            fill
+            className="object-cover opacity-40"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/60 to-gray-900/90" />
+        </div>
+        <div className="relative">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
+              <Home className="h-4 w-4 text-white" />
+            </div>
+            <span className="text-lg font-bold text-white">NestMate</span>
+          </Link>
+        </div>
+        <div className="relative mt-auto space-y-4">
+          <p className="text-2xl font-bold text-white leading-tight">
+            Post your room or find your next home
+          </p>
+          <div className="flex flex-col gap-2">
+            {[
+              { icon: Shield, text: "100% free to list" },
+              { icon: Star, text: "Direct landlord contact" },
+            ].map(({ icon: Icon, text }) => (
+              <div key={text} className="flex items-center gap-2 text-white/70 text-sm">
+                <Icon className="h-4 w-4 text-brand-400 shrink-0" />
+                {text}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Right panel */}
+      <div className="flex-1 flex flex-col items-center justify-center p-8">
+        <div className="lg:hidden mb-8">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
+              <Home className="h-4 w-4 text-white" />
+            </div>
+            <span className="text-lg font-bold text-gray-900">NestMate</span>
+          </Link>
+        </div>
         <SignUp />
       </div>
     </div>

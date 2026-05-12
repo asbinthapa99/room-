@@ -8,6 +8,12 @@ import { formatPrice, formatDate } from "@/lib/utils";
 import { ContactButton } from "@/components/listings/ContactButton";
 import { SaveButton } from "@/components/listings/SaveButton";
 import { ReportButton } from "@/components/listings/ReportButton";
+import { LocationMap } from "@/components/ui/location-map";
+
+const CITY_COORDINATES: Record<string, { coords: string; label: string }> = {
+  london: { coords: "51.5074° N, 0.1278° W", label: "London, UK" },
+  toronto: { coords: "43.6532° N, 79.3832° W", label: "Toronto, Canada" },
+};
 
 interface PageProps { params: Promise<{ id: string }> }
 
@@ -57,8 +63,8 @@ export default async function ListingDetailPage({ params }: PageProps) {
             {listing.images[0] ? (
               <Image src={listing.images[0]} alt={listing.title} fill className="object-cover" priority sizes="(max-width: 640px) 100vw, 50vw" />
             ) : (
-              <div className="h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
-                <span className="text-blue-400 text-sm">No photo</span>
+              <div className="h-full bg-gradient-to-br from-brand-100 to-brand-200 flex items-center justify-center">
+                <span className="text-brand-400 text-sm">No photo</span>
               </div>
             )}
           </div>
@@ -126,14 +132,14 @@ export default async function ListingDetailPage({ params }: PageProps) {
             {/* Info boxes */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="glass-card p-4 flex items-center gap-3">
-                <div className="p-2.5 bg-blue-50 rounded-xl"><Calendar className="h-5 w-5 text-blue-600" /></div>
+                <div className="p-2.5 bg-brand-50 rounded-xl"><Calendar className="h-5 w-5 text-brand-600" /></div>
                 <div>
                   <p className="text-xs text-gray-500">Available from</p>
                   <p className="font-semibold text-gray-900">{formatDate(listing.availableDate)}</p>
                 </div>
               </div>
               <div className="glass-card p-4 flex items-center gap-3">
-                <div className="p-2.5 bg-blue-50 rounded-xl"><Clock className="h-5 w-5 text-blue-600" /></div>
+                <div className="p-2.5 bg-brand-50 rounded-xl"><Clock className="h-5 w-5 text-brand-600" /></div>
                 <div>
                   <p className="text-xs text-gray-500">Minimum stay</p>
                   <p className="font-semibold text-gray-900">1 month</p>
@@ -157,6 +163,23 @@ export default async function ListingDetailPage({ params }: PageProps) {
               </div>
             </div>
 
+            {/* Location Map */}
+            {(() => {
+              const cityKey = listing.city.toLowerCase();
+              const cityInfo = CITY_COORDINATES[cityKey] ?? { coords: "", label: listing.city };
+              return (
+                <div className="glass-card p-5">
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">Location</h2>
+                  <div className="flex justify-center">
+                    <LocationMap location={cityInfo.label} coordinates={cityInfo.coords} />
+                  </div>
+                  <p className="text-xs text-gray-400 text-center mt-8">
+                    Exact address shared after booking confirmation
+                  </p>
+                </div>
+              );
+            })()}
+
             {/* Landlord */}
             <div className="glass-card p-5">
               <h2 className="text-lg font-bold text-gray-900 mb-4">About the landlord</h2>
@@ -164,7 +187,7 @@ export default async function ListingDetailPage({ params }: PageProps) {
                 {listing.landlord.avatar ? (
                   <Image src={listing.landlord.avatar} alt="" width={56} height={56} className="rounded-full ring-2 ring-white shadow" />
                 ) : (
-                  <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center shadow">
+                  <div className="h-14 w-14 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow">
                     <span className="text-xl font-bold text-white">{(listing.landlord.name ?? "L")[0].toUpperCase()}</span>
                   </div>
                 )}

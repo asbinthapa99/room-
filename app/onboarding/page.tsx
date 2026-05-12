@@ -27,8 +27,8 @@ export default function OnboardingPage() {
           <div className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 backdrop-blur border border-white/20 mb-4">
             <Home className="h-6 w-6 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">Welcome to RoomRent</h1>
-          <p className="text-blue-100 text-sm">How will you be using RoomRent?</p>
+          <h1 className="text-2xl font-bold text-white mb-2">Welcome to NestMate</h1>
+          <p className="text-blue-100 text-sm">How will you be using NestMate?</p>
         </div>
 
         <div className="grid grid-cols-1 gap-4">
