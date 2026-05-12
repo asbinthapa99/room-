@@ -427,34 +427,82 @@ export default async function HomePage() {
       </HeroHighlight>
 
       {/* ─── CTA Banner ─── */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="relative rounded-3xl overflow-hidden bg-gray-900 px-8 py-14 md:px-14 md:py-20 text-center">
-            {/* Sparkles across dark banner */}
+          <div className="relative rounded-3xl overflow-hidden">
+
+            {/* Background photo */}
+            <Image
+              src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1600&q=80"
+              alt=""
+              fill
+              className="object-cover"
+              sizes="(max-width: 1280px) 100vw, 1280px"
+            />
+
+            {/* Dark gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-950/95 via-gray-950/80 to-gray-950/40" />
+
+            {/* Sparkles */}
             <Sparkles
               className="absolute inset-0 w-full h-full"
-              density={50}
-              size={0.9}
-              speed={0.3}
-              opacity={0.5}
+              density={35}
+              size={0.8}
+              speed={0.25}
+              opacity={0.4}
               color="#fda4af"
             />
-            <div className="relative">
-              <Badge variant="dark" className="mb-6 border border-white/20 text-white/80">
-                Free to list
-              </Badge>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Have a room to rent?
-              </h2>
-              <p className="text-white/60 mb-8 max-w-md mx-auto leading-relaxed">
-                Post your listing in minutes. Reach thousands of students and newcomers looking for a home.
-              </p>
-              <Link href="/sign-up">
-                <MetalButton variant="gold">
-                  Post a Room Free <ArrowRight className="h-4 w-4" />
-                </MetalButton>
-              </Link>
+
+            {/* Content */}
+            <div className="relative px-8 py-16 md:px-14 md:py-24 lg:grid lg:grid-cols-2 lg:gap-12 lg:items-center">
+
+              {/* Left: copy */}
+              <div>
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 backdrop-blur px-4 py-1.5 text-xs font-semibold text-white/80 uppercase tracking-widest mb-6">
+                  Free to list
+                </span>
+                <h2 className="text-4xl md:text-5xl font-black text-white leading-tight mb-5">
+                  Have a room<br />
+                  <span className="text-brand-400">to rent?</span>
+                </h2>
+                <p className="text-white/60 text-base md:text-lg leading-relaxed mb-8 max-w-md">
+                  Post your listing in minutes. Reach thousands of students and newcomers searching for a home in London and Toronto.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link href="/sign-up">
+                    <MetalButton variant="gold">
+                      Post a Room Free <ArrowRight className="h-4 w-4" />
+                    </MetalButton>
+                  </Link>
+                  <Link href="/listings">
+                    <MetalButton variant="default">
+                      Browse listings
+                    </MetalButton>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Right: floating stat cards */}
+              <div className="hidden lg:flex flex-col gap-4 items-end">
+                {[
+                  { value: "2 min", label: "Average time to post a listing", icon: "⚡" },
+                  { value: "100%", label: "Free for landlords, always", icon: "🎉" },
+                  { value: "24 hr", label: "Manual review turnaround", icon: "🛡️" },
+                ].map(({ value, label, icon }) => (
+                  <div
+                    key={value}
+                    className="flex items-center gap-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/15 px-6 py-4 w-72"
+                  >
+                    <span className="text-2xl">{icon}</span>
+                    <div>
+                      <p className="text-2xl font-black text-white leading-none">{value}</p>
+                      <p className="text-white/55 text-xs mt-0.5 leading-snug">{label}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
+
           </div>
         </div>
       </section>
