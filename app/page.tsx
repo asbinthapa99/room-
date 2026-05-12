@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Search, Shield, MessageSquare, ArrowRight, MapPin, Star } from "lucide-react";
 import { db } from "@/lib/db";
 import { ListingCard } from "@/components/listings/ListingCard";
+import { HeroSearch } from "@/components/shared/HeroSearch";
 
 async function getRecentListings() {
   try {
@@ -55,25 +56,7 @@ export default async function HomePage() {
             </p>
 
             {/* Search bar */}
-            <form action="/listings" method="GET" className="bg-white rounded-xl p-3 flex flex-col sm:flex-row gap-3 shadow-xl">
-              <select name="city" className="flex-1 rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Select city</option>
-                <option value="london">London, UK</option>
-                <option value="toronto">Toronto, Canada</option>
-              </select>
-              <select name="roomType" className="flex-1 rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">Any room type</option>
-                <option value="PRIVATE">Private Room</option>
-                <option value="SHARED">Shared Room</option>
-              </select>
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors whitespace-nowrap"
-              >
-                <Search className="h-4 w-4" />
-                Search Rooms
-              </button>
-            </form>
+            <HeroSearch />
           </div>
         </div>
       </section>

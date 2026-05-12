@@ -18,7 +18,11 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   const body = await req.json();
   const updated = await db.listing.update({
     where: { id },
-    data: { ...body, availableDate: body.availableDate ? new Date(body.availableDate) : undefined },
+    data: {
+      ...body,
+      availableDate: body.availableDate ? new Date(body.availableDate) : undefined,
+      approved: false, // edited listings require re-approval
+    },
   });
 
   return NextResponse.json(updated);

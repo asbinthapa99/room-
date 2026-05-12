@@ -11,6 +11,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid role" }, { status: 400 });
   }
 
-  await db.user.update({ where: { clerkId }, data: { role } });
+  await db.user.upsert({
+    where: { clerkId },
+    update: { role },
+    create: { clerkId, email: "", role },
+  });
   return NextResponse.json({ ok: true });
 }
