@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { formatDate, formatPrice } from "@/lib/utils";
 import { Shield, Users, Home, Flag, CheckCircle, XCircle } from "lucide-react";
 import { AdminActions } from "@/components/admin/AdminActions";
+import { BanButton } from "@/components/admin/BanButton";
 
 export default async function AdminPage() {
   const { userId: clerkId } = await auth();

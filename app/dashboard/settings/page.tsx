@@ -3,12 +3,23 @@ import { redirect } from "next/navigation";
 import { Bell, Shield } from "lucide-react";
 import { db } from "@/lib/db";
 import { DeleteAccountButton } from "@/components/dashboard/DeleteAccountButton";
+import { NotificationSettings } from "@/components/dashboard/NotificationSettings";
 
 export default async function SettingsPage() {
   const { userId: clerkId } = await auth();
   if (!clerkId) redirect("/sign-in");
 
-  const user = await db.user.findUnique({ where: { clerkId }, select: { id: true, name: true, email: true } });
+  const user = await db.user.findUnique({
+    where: { clerkId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      emailNotifications: true,
+      messageAlerts: true,
+      listingAlerts: true,
+    },
+  });
   if (!user) redirect("/onboarding");
 
   return (
@@ -27,48 +38,35 @@ export default async function SettingsPage() {
                 <p className="text-xs text-gray-500">Manage your notification preferences</p>
               </div>
             </div>
-            <div className="space-y-4">
-              {[
-                { label: "Email notifications", desc: "Receive updates via email", defaultChecked: true },
-                { label: "New message alerts", desc: "Get notified about new messages", defaultChecked: true },
-                { label: "Listing alerts", desc: "New listings matching your criteria", defaultChecked: false },
-              ].map(({ label, desc, defaultChecked }) => (
-                <div key={label} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{label}</p>
-                    <p className="text-xs text-gray-500">{desc}</p>
-                  </div>
-                  <input
-                    type="checkbox"
-                    defaultChecked={defaultChecked}
-                    className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 focus:ring-offset-0"
-                  />
-                </div>
-              ))}
-            </div>
+            <NotificationSettings
+              initial={{
+                emailNotifications: user.emailNotifications,
+                messageAlerts: user.messageAlerts,
+                listingAlerts: user.listingAlerts,
+              }}
+            />
           </div>
 
-          {/* Security */}
+          {/* Security — managed by Clerk, links out */}
           <div className="glass-card p-6">
             <div className="flex items-center gap-3 mb-5">
               <Shield className="h-5 w-5 text-gray-700" />
               <div>
                 <h2 className="font-bold text-gray-900">Security</h2>
-                <p className="text-xs text-gray-500">Manage your account security</p>
+                <p className="text-xs text-gray-500">Managed via your Clerk account</p>
               </div>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-0">
               {[
-                { label: "Password", desc: "Last changed 3 months ago", action: "Change" },
-                { label: "Two-factor authentication", desc: "Add an extra layer of security", action: "Enable" },
-                { label: "Connected accounts", desc: "Google, Apple", action: "Manage" },
-              ].map(({ label, desc, action }) => (
+                { label: "Email address", desc: user.email },
+                { label: "Password & 2FA", desc: "Managed in your account portal" },
+                { label: "Connected accounts", desc: "OAuth providers linked to your account" },
+              ].map(({ label, desc }) => (
                 <div key={label} className="flex items-center justify-between py-3 border-b border-gray-100 last:border-0">
                   <div>
                     <p className="text-sm font-medium text-gray-900">{label}</p>
-                    <p className="text-xs text-gray-500">{desc}</p>
+                    <p className="text-xs text-gray-500 truncate max-w-[180px]">{desc}</p>
                   </div>
-                  <button className="btn-secondary text-xs px-3 py-1.5">{action}</button>
                 </div>
               ))}
             </div>
