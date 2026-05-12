@@ -14,7 +14,6 @@ interface Message {
   read: boolean;
   createdAt: Date;
   sender: { id: string; name: string | null; avatar: string | null };
-  listing: { id: string; title: string };
 }
 
 interface Conversation {
@@ -22,6 +21,7 @@ interface Conversation {
   content: string;
   senderId: string;
   receiverId: string;
+  listingId: string;
   read: boolean;
   createdAt: Date;
   sender: { id: string; name: string | null; avatar: string | null };

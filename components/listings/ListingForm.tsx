@@ -103,8 +103,9 @@ export function ListingForm({ initialData }: ListingFormProps) {
             <CldUploadWidget
               uploadPreset="roomrent_listings"
               onSuccess={(result) => {
-                if (result.info && typeof result.info === "object" && "secure_url" in result.info) {
-                  setImages((prev) => [...prev, result.info!.secure_url as string]);
+                const info = result.info as { secure_url?: string } | undefined;
+                if (info?.secure_url) {
+                  setImages((prev) => [...prev, info.secure_url!]);
                 }
               }}
             >
