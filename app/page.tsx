@@ -17,13 +17,25 @@ async function getRecentListings() {
   }
 }
 
+async function getCityCounts() {
+  try {
+    const [london, toronto] = await Promise.all([
+      db.listing.count({ where: { approved: true, rented: false, city: { equals: "london", mode: "insensitive" } } }),
+      db.listing.count({ where: { approved: true, rented: false, city: { equals: "toronto", mode: "insensitive" } } }),
+    ]);
+    return { london, toronto };
+  } catch {
+    return { london: 0, toronto: 0 };
+  }
+}
+
 const POPULAR_CITIES = [
-  { city: "london", label: "London", country: "UK", image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&q=80", listings: 1234 },
-  { city: "toronto", label: "Toronto", country: "Canada", image: "https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=600&q=80", listings: 856 },
+  { city: "london", label: "London", image: "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&q=80" },
+  { city: "toronto", label: "Toronto", image: "https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=600&q=80" },
 ];
 
 export default async function HomePage() {
-  const listings = await getRecentListings();
+  const [listings, cityCounts] = await Promise.all([getRecentListings(), getCityCounts()]);
 
   return (
     <div className="bg-white">
@@ -43,25 +55,25 @@ export default async function HomePage() {
             </p>
 
             {/* Search bar */}
-            <div className="bg-white rounded-xl p-3 flex flex-col sm:flex-row gap-3 shadow-xl">
-              <select className="flex-1 rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <form action="/listings" method="GET" className="bg-white rounded-xl p-3 flex flex-col sm:flex-row gap-3 shadow-xl">
+              <select name="city" className="flex-1 rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Select city</option>
                 <option value="london">London, UK</option>
                 <option value="toronto">Toronto, Canada</option>
               </select>
-              <select className="flex-1 rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <select name="roomType" className="flex-1 rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option value="">Any room type</option>
                 <option value="PRIVATE">Private Room</option>
                 <option value="SHARED">Shared Room</option>
               </select>
-              <Link
-                href="/listings"
+              <button
+                type="submit"
                 className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors whitespace-nowrap"
               >
                 <Search className="h-4 w-4" />
                 Search Rooms
-              </Link>
-            </div>
+              </button>
+            </form>
           </div>
         </div>
       </section>
@@ -79,26 +91,31 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {POPULAR_CITIES.map(({ city, label, image, listings: count }) => (
-              <Link
-                key={city}
-                href={`/listings?city=${city}`}
-                className="relative rounded-xl overflow-hidden h-40 sm:h-48 group"
-              >
-                <Image
-                  src={image}
-                  alt={label}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 640px) 100vw, 50vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 text-white">
-                  <p className="font-bold text-lg leading-none">{label}</p>
-                  <p className="text-sm text-white/80 mt-1">{count.toLocaleString()} listings available</p>
-                </div>
-              </Link>
-            ))}
+            {POPULAR_CITIES.map(({ city, label, image }) => {
+              const count = cityCounts[city as keyof typeof cityCounts];
+              return (
+                <Link
+                  key={city}
+                  href={`/listings?city=${city}`}
+                  className="relative rounded-xl overflow-hidden h-40 sm:h-48 group"
+                >
+                  <Image
+                    src={image}
+                    alt={label}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    sizes="(max-width: 640px) 100vw, 50vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <p className="font-bold text-lg leading-none">{label}</p>
+                    <p className="text-sm text-white/80 mt-1">
+                      {count > 0 ? `${count.toLocaleString()} listings available` : "Listings coming soon"}
+                    </p>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>

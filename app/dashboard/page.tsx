@@ -12,17 +12,20 @@ export default async function DashboardPage() {
   const user = await db.user.findUnique({
     where: { clerkId },
     include: {
-      listings: { where: { approved: true }, orderBy: { createdAt: "desc" }, take: 3 },
-      savedListings: { take: 1 },
-      receivedMessages: { where: { read: false }, take: 1 },
+      listings: { orderBy: { createdAt: "desc" }, take: 3 },
     },
   });
   if (!user) redirect("/onboarding");
 
+  const [savedCount, unreadCount] = await Promise.all([
+    db.savedListing.count({ where: { userId: user.id } }),
+    db.message.count({ where: { receiverId: user.id, read: false } }),
+  ]);
+
   const stats = [
     { label: "Active Listings", value: user.listings.filter((l) => !l.rented).length, icon: Home, color: "bg-blue-50 text-blue-600" },
-    { label: "Saved Rooms", value: user.savedListings.length, icon: Heart, color: "bg-pink-50 text-pink-600" },
-    { label: "Unread Messages", value: user.receivedMessages.length, icon: MessageSquare, color: "bg-purple-50 text-purple-600" },
+    { label: "Saved Rooms", value: savedCount, icon: Heart, color: "bg-pink-50 text-pink-600" },
+    { label: "Unread Messages", value: unreadCount, icon: MessageSquare, color: "bg-purple-50 text-purple-600" },
   ];
 
   return (
