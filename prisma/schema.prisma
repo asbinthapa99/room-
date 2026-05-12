@@ -15,9 +15,12 @@ model User {
   name      String?
   avatar    String?
   role      Role     @default(RENTER)
-  banned    Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  banned             Boolean  @default(false)
+  emailNotifications Boolean  @default(true)
+  messageAlerts      Boolean  @default(true)
+  listingAlerts      Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
   listings         Listing[]
   savedListings    SavedListing[]
