@@ -53,8 +53,29 @@ export function MessagesClient({ currentUserId, conversations, thread: initialTh
   const [sending, setSending] = useState(false);
   const [showList, setShowList] = useState(!activeListingId);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const lastMessageTime = useRef<string | null>(
+    initialThread.length > 0 ? new Date(initialThread[initialThread.length - 1].createdAt).toISOString() : null
+  );
 
   useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [thread]);
+
+  // Poll for new messages every 5 seconds when a conversation is open
+  useEffect(() => {
+    if (!activeListingId || !activeOtherId) return;
+    const poll = async () => {
+      const params = new URLSearchParams({ listingId: activeListingId, otherId: activeOtherId });
+      if (lastMessageTime.current) params.set("after", lastMessageTime.current);
+      const res = await fetch(`/api/messages/thread?${params}`);
+      if (!res.ok) return;
+      const newMsgs: Message[] = await res.json();
+      if (newMsgs.length > 0) {
+        setThread((prev) => [...prev, ...newMsgs]);
+        lastMessageTime.current = new Date(newMsgs[newMsgs.length - 1].createdAt).toISOString();
+      }
+    };
+    const id = setInterval(poll, 5000);
+    return () => clearInterval(id);
+  }, [activeListingId, activeOtherId]);
 
   const sendMessage = async () => {
     if (!message.trim() || !activeListingId || !activeOtherId) return;
@@ -67,6 +88,7 @@ export function MessagesClient({ currentUserId, conversations, thread: initialTh
     if (res.ok) {
       const newMsg = await res.json();
       setThread((prev) => [...prev, newMsg]);
+      lastMessageTime.current = new Date(newMsg.createdAt).toISOString();
       setMessage("");
     }
     setSending(false);

@@ -46,7 +46,7 @@ export function ReportButton({ listingId, inline }: { listingId: string; inline?
               <X className="h-4 w-4 text-gray-500" />
             </button>
             <h2 className="font-bold text-gray-900 mb-1">Report this listing</h2>
-            <p className="text-sm text-gray-500 mb-4">Help us keep RoomRent safe and scam-free.</p>
+            <p className="text-sm text-gray-500 mb-4">Help us keep NestMate safe and scam-free.</p>
 
             {done ? (
               <p className="text-sm text-green-600 font-medium text-center py-4">Thanks for your report! We will review it shortly.</p>

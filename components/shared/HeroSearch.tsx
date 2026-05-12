@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { Search, MapPin, Home } from "lucide-react";
+import { LiquidButton } from "@/components/ui/liquid-glass-button";
 
 const CITY_OPTIONS = [
   { value: "london", label: "London, UK", country: "UK" },
@@ -31,34 +32,57 @@ export function HeroSearch() {
   };
 
   return (
-    <div className="bg-white rounded-xl p-3 flex flex-col sm:flex-row gap-3 shadow-xl">
-      <select
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-        className="flex-1 rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="">Select city</option>
-        {CITY_OPTIONS.map((c) => (
-          <option key={c.value} value={c.value}>{c.label}</option>
-        ))}
-      </select>
-      <select
-        value={roomType}
-        onChange={(e) => setRoomType(e.target.value)}
-        className="flex-1 rounded-lg border border-gray-200 px-3 py-2.5 text-sm text-gray-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-      >
-        <option value="">Any room type</option>
-        {ROOM_TYPES.map((r) => (
-          <option key={r.value} value={r.value}>{r.label}</option>
-        ))}
-      </select>
-      <button
-        onClick={handleSearch}
-        className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors whitespace-nowrap"
-      >
-        <Search className="h-4 w-4" />
-        Search Rooms
-      </button>
+    <div className="w-full max-w-2xl">
+      <div className="glass-panel p-2 flex flex-col sm:flex-row gap-2 shadow-float">
+        {/* City */}
+        <div className="flex items-center gap-2.5 flex-1 bg-white/60 rounded-xl px-4 py-3 border border-white/80">
+          <MapPin className="h-4 w-4 text-brand-500 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider leading-none mb-1">City</p>
+            <select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="w-full bg-transparent text-sm font-medium text-gray-900 focus:outline-none appearance-none cursor-pointer"
+            >
+              <option value="">Any city</option>
+              {CITY_OPTIONS.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="hidden sm:block w-px bg-gray-200 my-2" />
+
+        {/* Room type */}
+        <div className="flex items-center gap-2.5 flex-1 bg-white/60 rounded-xl px-4 py-3 border border-white/80">
+          <Home className="h-4 w-4 text-brand-500 shrink-0" />
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider leading-none mb-1">Room type</p>
+            <select
+              value={roomType}
+              onChange={(e) => setRoomType(e.target.value)}
+              className="w-full bg-transparent text-sm font-medium text-gray-900 focus:outline-none appearance-none cursor-pointer"
+            >
+              <option value="">Any type</option>
+              {ROOM_TYPES.map((r) => (
+                <option key={r.value} value={r.value}>{r.label}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Search button — liquid glass over hero photo */}
+        <LiquidButton
+          onClick={handleSearch}
+          size="lg"
+          className="text-white font-semibold shrink-0 rounded-xl"
+        >
+          <Search className="h-4 w-4" />
+          Search
+        </LiquidButton>
+      </div>
     </div>
   );
 }

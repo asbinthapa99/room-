@@ -3,97 +3,251 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { Home, Search, MessageSquare, Heart, PlusCircle, Menu, X } from "lucide-react";
-import { useState } from "react";
+import { Home, Search, MessageSquare, Heart, PlusCircle, MenuIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isClerkConfigured } from "@/lib/clerk-config";
+import { MetalButton } from "@/components/ui/liquid-glass-button";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button-1";
 
 export function Navbar() {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
 
-  const links = [
-    { href: "/listings", label: "Browse Rooms", icon: Search },
-    { href: "/dashboard/messages", label: "Messages", icon: MessageSquare, auth: true },
-    { href: "/dashboard/saved", label: "Saved", icon: Heart, auth: true },
+  const features = [
+    {
+      title: "Browse Rooms",
+      description: "Search verified listings in your city",
+      href: "/listings",
+    },
+    {
+      title: "Dashboard",
+      description: "Manage your bookings and listings",
+      href: "/dashboard",
+    },
+    {
+      title: "Messages",
+      description: "Chat with landlords directly",
+      href: "/dashboard/messages",
+      auth: true,
+    },
+    {
+      title: "Saved Rooms",
+      description: "View your saved listings",
+      href: "/dashboard/saved",
+      auth: true,
+    },
+    {
+      title: "Post a Room",
+      description: "List your room for free",
+      href: "/dashboard/listings/new",
+      auth: true,
+    },
+    {
+      title: "Settings",
+      description: "Manage your account",
+      href: "/dashboard/settings",
+      auth: true,
+    },
+  ];
+
+  const mobileLinks = [
+    { label: "Browse Rooms", href: "/listings" },
+    { label: "Dashboard", href: "/dashboard" },
+    { label: "Messages", href: "/dashboard/messages", auth: true },
+    { label: "Saved", href: "/dashboard/saved", auth: true },
+    { label: "Settings", href: "/dashboard/settings", auth: true },
   ];
 
   return (
     <nav className="sticky top-0 z-50 glass-nav">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-600 shadow-sm">
+          <Link href="/" className="flex items-center gap-2.5 shrink-0">
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-600 shadow-sm">
               <Home className="h-4 w-4 text-white" />
             </div>
-            <span className="text-base font-bold text-gray-900 tracking-tight">RoomRent</span>
+            <span className="text-base font-bold tracking-tight text-gray-900">NestMate</span>
           </Link>
 
-          {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-0.5">
-            {links.map(({ href, label, auth }) => {
-              const active = pathname.startsWith(href);
-              const el = (
-                <Link
-                  key={href}
-                  href={href}
-                  className={cn(
-                    "px-3.5 py-2 rounded-xl text-sm font-medium transition-colors",
-                    active ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  )}
+          {/* Desktop Navigation */}
+          <NavigationMenu className="hidden lg:block">
+            <NavigationMenuList>
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>Explore</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <div className="grid w-[600px] grid-cols-2 p-3">
+                    {features.map((feature) => {
+                      if (feature.auth && !isClerkConfigured) return null;
+                      const showAuth = feature.auth ? <SignedIn key={feature.href}><NavigationLink feature={feature} /></SignedIn> : <NavigationLink key={feature.href} feature={feature} />;
+                      return showAuth;
+                    })}
+                  </div>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="/listings"
+                  className={navigationMenuTriggerStyle()}
                 >
-                  {label}
-                </Link>
-              );
-              return auth ? <SignedIn key={href}>{el}</SignedIn> : el;
-            })}
-          </div>
+                  Browse Rooms
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="/dashboard"
+                  className={navigationMenuTriggerStyle()}
+                >
+                  Dashboard
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
 
-          {/* Auth */}
-          <div className="flex items-center gap-2.5">
-            <SignedIn>
-              <Link href="/dashboard/listings/new" className="hidden md:inline-flex btn-primary gap-2 text-xs px-3 py-2">
-                <PlusCircle className="h-3.5 w-3.5" /> Post a Room
-              </Link>
-              <UserButton afterSignOutUrl="/" />
-            </SignedIn>
-            <SignedOut>
-              <Link href="/sign-in" className="hidden md:inline-flex btn-secondary text-xs px-3 py-2">Sign In</Link>
-              <Link href="/sign-up" className="hidden md:inline-flex btn-primary text-xs px-3 py-2">Get Started</Link>
-            </SignedOut>
-            <button className="md:hidden p-2 rounded-xl text-gray-600 hover:bg-gray-100" onClick={() => setOpen(!open)}>
-              {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
+          {/* Right Actions */}
+          <div className="flex items-center gap-3">
+            {isClerkConfigured ? (
+              <>
+                <SignedIn>
+                  <Link href="/dashboard/listings/new" className="hidden lg:inline-flex">
+                    <MetalButton variant="primary" className="h-9 px-4 text-sm rounded-xl">
+                      <PlusCircle className="h-4 w-4" /> Post a Room
+                    </MetalButton>
+                  </Link>
+                  <UserButton afterSignOutUrl="/" />
+                </SignedIn>
+                <SignedOut>
+                  <Link href="/sign-in" className="hidden lg:inline-flex btn-secondary text-sm px-4 py-2">
+                    Sign in
+                  </Link>
+                  <Link href="/sign-up" className="hidden lg:inline-flex btn-primary text-sm px-4 py-2">
+                    Get started
+                  </Link>
+                </SignedOut>
+              </>
+            ) : (
+              <>
+                <Link href="/sign-in" className="hidden lg:inline-flex btn-secondary text-sm px-4 py-2">
+                  Sign in
+                </Link>
+                <Link href="/sign-up" className="hidden lg:inline-flex btn-primary text-sm px-4 py-2">
+                  Get started
+                </Link>
+              </>
+            )}
+
+            {/* Mobile Menu */}
+            <Sheet>
+              <SheetTrigger asChild className="lg:hidden">
+                <Button variant="outline" size="icon">
+                  <MenuIcon className="h-4 w-4" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="top" className="max-h-screen overflow-auto">
+                <SheetHeader>
+                  <SheetTitle>
+                    <Link href="/" className="flex items-center gap-2">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-brand-600 shadow-sm">
+                        <Home className="h-4 w-4 text-white" />
+                      </div>
+                      <span className="text-lg font-semibold tracking-tight">NestMate</span>
+                    </Link>
+                  </SheetTitle>
+                </SheetHeader>
+                <div className="flex flex-col p-4">
+                  <Accordion type="single" collapsible className="mt-4 mb-2">
+                    <AccordionItem value="explore" className="border-none">
+                      <AccordionTrigger className="text-base hover:no-underline">
+                        Explore
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col gap-2">
+                          {mobileLinks.map((link) => {
+                            if (link.auth && !isClerkConfigured) return null;
+                            const el = (
+                              <Link
+                                key={link.href}
+                                href={link.href}
+                                className="rounded-md p-3 transition-colors hover:bg-gray-100"
+                              >
+                                <p className="font-semibold text-gray-900">{link.label}</p>
+                              </Link>
+                            );
+                            return link.auth ? <SignedIn key={link.href}>{el}</SignedIn> : el;
+                          })}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                  <div className="flex flex-col gap-3 mt-4">
+                    <SignedIn>
+                      <Link href="/dashboard/listings/new" className="font-medium text-gray-900">
+                        Post a Room
+                      </Link>
+                    </SignedIn>
+                  </div>
+                  <div className="mt-6 flex flex-col gap-3">
+                    {isClerkConfigured ? (
+                      <>
+                        <SignedOut>
+                          <Link href="/sign-in" className="w-full">
+                            <Button variant="outline" className="w-full">Sign in</Button>
+                          </Link>
+                          <Link href="/sign-up" className="w-full">
+                            <Button className="w-full">Get started</Button>
+                          </Link>
+                        </SignedOut>
+                      </>
+                    ) : (
+                      <>
+                        <Link href="/sign-in" className="w-full">
+                          <Button variant="outline" className="w-full">Sign in</Button>
+                        </Link>
+                        <Link href="/sign-up" className="w-full">
+                          <Button className="w-full">Get started</Button>
+                        </Link>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>
-
-      {/* Mobile drawer */}
-      {open && (
-        <div className="md:hidden border-t border-gray-100 bg-white/95 backdrop-blur-xl px-4 py-3 space-y-1">
-          {links.map(({ href, label, icon: Icon, auth }) => {
-            const el = (
-              <Link key={href} href={href} onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-100">
-                <Icon className="h-4 w-4 text-gray-500" /> {label}
-              </Link>
-            );
-            return auth ? <SignedIn key={href}>{el}</SignedIn> : el;
-          })}
-          <SignedIn>
-            <Link href="/dashboard/listings/new" onClick={() => setOpen(false)}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-blue-700 bg-blue-50">
-              <PlusCircle className="h-4 w-4" /> Post a Room
-            </Link>
-          </SignedIn>
-          <SignedOut>
-            <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
-              <Link href="/sign-in" onClick={() => setOpen(false)} className="btn-secondary w-full justify-center">Sign In</Link>
-              <Link href="/sign-up" onClick={() => setOpen(false)} className="btn-primary w-full justify-center">Get Started Free</Link>
-            </div>
-          </SignedOut>
-        </div>
-      )}
     </nav>
+  );
+}
+
+function NavigationLink({ feature }: { feature: { title: string; description: string; href: string; auth?: boolean } }) {
+  return (
+    <NavigationMenuLink
+      href={feature.href}
+      className="rounded-md p-3 transition-colors hover:bg-gray-100 block"
+    >
+      <p className="mb-1 font-semibold text-gray-900">{feature.title}</p>
+      <p className="text-sm text-gray-500">{feature.description}</p>
+    </NavigationMenuLink>
   );
 }

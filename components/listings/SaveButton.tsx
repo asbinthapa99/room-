@@ -5,8 +5,23 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { Heart, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isClerkConfigured } from "@/lib/clerk-config";
 
-export function SaveButton({ listingId, initialSaved }: { listingId: string; initialSaved: boolean }) {
+function GuestSaveButton({ initialSaved }: { initialSaved: boolean }) {
+  const router = useRouter();
+
+  return (
+    <button
+      onClick={() => router.push("/sign-in")}
+      className="w-full flex items-center justify-center gap-2 bg-white hover:bg-gray-50 active:scale-95 text-gray-900 font-semibold py-3.5 px-4 rounded-xl border border-gray-200 transition-all text-sm"
+    >
+      <Heart className={cn("h-4 w-4 transition-colors", initialSaved ? "fill-red-500 text-red-500" : "text-gray-500")} />
+      {initialSaved ? "Saved to Favorites" : "Save to Favorites"}
+    </button>
+  );
+}
+
+function AuthSaveButton({ listingId, initialSaved }: { listingId: string; initialSaved: boolean }) {
   const { isSignedIn } = useUser();
   const router = useRouter();
   const [saved, setSaved] = useState(initialSaved);
@@ -37,5 +52,13 @@ export function SaveButton({ listingId, initialSaved }: { listingId: string; ini
       )}
       {saved ? "Saved to Favorites" : "Save to Favorites"}
     </button>
+  );
+}
+
+export function SaveButton({ listingId, initialSaved }: { listingId: string; initialSaved: boolean }) {
+  return isClerkConfigured ? (
+    <AuthSaveButton listingId={listingId} initialSaved={initialSaved} />
+  ) : (
+    <GuestSaveButton initialSaved={initialSaved} />
   );
 }
