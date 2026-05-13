@@ -41,16 +41,14 @@ export function ListingCard({ listing, isSaved = false, onToggleSave }: ListingC
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
 
-        {/* Save button */}
-        {onToggleSave && (
-          <button
-            onClick={(e) => { e.preventDefault(); onToggleSave(listing.id); }}
-            className="absolute top-3 right-3 p-2 rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:bg-white hover:scale-110 transition-all duration-150 z-10"
-            aria-label={isSaved ? "Remove from saved" : "Save listing"}
-          >
-            <Heart className={cn("h-4 w-4 transition-colors", isSaved ? "fill-brand-500 text-brand-500" : "text-gray-500")} />
-          </button>
-        )}
+        {/* Save button — always visible */}
+        <button
+          onClick={(e) => { e.preventDefault(); onToggleSave?.(listing.id); }}
+          className="absolute top-3 right-3 p-2 rounded-full bg-white/90 backdrop-blur-sm shadow-sm hover:bg-white hover:scale-110 transition-all duration-150 z-10"
+          aria-label={isSaved ? "Remove from saved" : "Save listing"}
+        >
+          <Heart className={cn("h-4 w-4 transition-colors", isSaved ? "fill-brand-500 text-brand-500" : "text-gray-400 hover:text-brand-400")} />
+        </button>
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex gap-1.5 z-10">

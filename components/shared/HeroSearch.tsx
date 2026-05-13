@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search, MapPin, Home, SlidersHorizontal } from "lucide-react";
+import { Search, MapPin, Home } from "lucide-react";
 
 const CITIES = [
   { value: "london", label: "London", flag: "🇬🇧", sub: "United Kingdom" },
@@ -21,6 +21,18 @@ export function HeroSearch() {
   const [roomType, setRoomType] = useState("");
   const [cityOpen, setCityOpen] = useState(false);
   const [typeOpen, setTypeOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setCityOpen(false);
+        setTypeOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   const selectedCity = CITIES.find((c) => c.value === city);
   const selectedType = ROOM_TYPES.find((r) => r.value === roomType);
@@ -36,7 +48,7 @@ export function HeroSearch() {
   };
 
   return (
-    <div className="w-full max-w-2xl relative">
+    <div className="w-full max-w-2xl relative" ref={containerRef}>
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl shadow-float overflow-visible p-1.5 gap-1.5">
 
         {/* City picker */}

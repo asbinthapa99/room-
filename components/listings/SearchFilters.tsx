@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Search, X, ChevronDown, SlidersHorizontal } from "lucide-react";
+import { Search, X, ChevronDown, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { CITIES, COUNTRIES, ROOM_TYPES } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +18,11 @@ export function SearchFilters() {
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") ?? "");
   const [availableFrom, setAvailableFrom] = useState(searchParams.get("availableFrom") ?? "");
   const [billsIncluded, setBillsIncluded] = useState(searchParams.get("billsIncluded") === "true");
+  const [sort, setSort] = useState(searchParams.get("sort") ?? "");
   const [showMore, setShowMore] = useState(false);
+
+  // derive currency symbol from active city
+  const currencySymbol = city === "toronto" ? "CA$" : "£";
 
   useEffect(() => {
     setQ(searchParams.get("q") ?? "");
@@ -28,6 +32,7 @@ export function SearchFilters() {
     setMaxPrice(searchParams.get("maxPrice") ?? "");
     setAvailableFrom(searchParams.get("availableFrom") ?? "");
     setBillsIncluded(searchParams.get("billsIncluded") === "true");
+    setSort(searchParams.get("sort") ?? "");
   }, [searchParams]);
 
   const push = useCallback(
@@ -43,10 +48,10 @@ export function SearchFilters() {
     [router, searchParams]
   );
 
-  const activeCount = [country, city, roomType, maxPrice, availableFrom, billsIncluded ? "1" : ""].filter(Boolean).length;
+  const activeCount = [country, city, roomType, maxPrice, availableFrom, billsIncluded ? "1" : "", sort].filter(Boolean).length;
 
   const clearAll = () => {
-    setCountry(""); setCity(""); setRoomType(""); setMaxPrice(""); setAvailableFrom(""); setBillsIncluded(false); setQ("");
+    setCountry(""); setCity(""); setRoomType(""); setMaxPrice(""); setAvailableFrom(""); setBillsIncluded(false); setQ(""); setSort("");
     router.push("/listings");
   };
 
@@ -120,6 +125,24 @@ export function SearchFilters() {
             Bills included
           </button>
 
+          {/* Sort */}
+          <div className="relative shrink-0">
+            <ArrowUpDown className={cn("absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 pointer-events-none", sort ? "text-white/70" : "text-gray-400")} />
+            <select
+              value={sort}
+              onChange={(e) => { setSort(e.target.value); push({ sort: e.target.value }); }}
+              className={cn(
+                "appearance-none rounded-full border pl-8 pr-8 py-2.5 text-sm font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-900/10 transition-all",
+                sort ? "border-gray-900 bg-gray-900 text-white" : "border-gray-200 bg-white text-gray-700 hover:border-gray-400"
+              )}
+            >
+              <option value="">Newest first</option>
+              <option value="price_asc">Price: Low → High</option>
+              <option value="price_desc">Price: High → Low</option>
+            </select>
+            <ChevronDown className={cn("absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 pointer-events-none", sort ? "text-white/70" : "text-gray-400")} />
+          </div>
+
           {/* More filters toggle */}
           <button
             onClick={() => setShowMore(!showMore)}
@@ -164,7 +187,7 @@ export function SearchFilters() {
 
             {/* Max budget */}
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-400 pointer-events-none">£</span>
+              <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none font-medium">{currencySymbol}</span>
               <input
                 type="number"
                 placeholder="Max budget"

@@ -13,6 +13,7 @@ interface SearchParams {
   maxPrice?: string;
   availableFrom?: string;
   billsIncluded?: string;
+  sort?: string;
   page?: string;
 }
 
@@ -32,10 +33,15 @@ async function getListings(params: SearchParams) {
   if (params.billsIncluded === "true") where.billsIncluded = true;
   if (params.availableFrom) where.availableDate = { lte: new Date(params.availableFrom) };
 
+  const orderBy =
+    params.sort === "price_asc" ? { price: "asc" as const } :
+    params.sort === "price_desc" ? { price: "desc" as const } :
+    { createdAt: "desc" as const };
+
   const [listings, total] = await Promise.all([
     db.listing.findMany({
       where,
-      orderBy: { createdAt: "desc" },
+      orderBy,
       skip: (page - 1) * limit,
       take: limit,
       include: { landlord: { select: { name: true, avatar: true } } },
