@@ -49,8 +49,8 @@ export function NotificationSettings({ initial }: Props) {
           <button
             onClick={() => toggle(key)}
             disabled={saving === key}
-            className="relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 disabled:opacity-60"
-            style={{ backgroundColor: prefs[key] ? "#2563eb" : "#d1d5db" }}
+            className="relative inline-flex h-5 w-9 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1 disabled:opacity-60"
+            style={{ backgroundColor: prefs[key] ? "#e11d48" : "#d1d5db" }}
             aria-checked={prefs[key]}
             role="switch"
           >

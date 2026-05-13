@@ -41,7 +41,7 @@ interface Props {
 function Avatar({ name, avatar, size = 10 }: { name: string | null; avatar: string | null; size?: number }) {
   if (avatar) return <Image src={avatar} alt="" width={size * 4} height={size * 4} className={`rounded-full w-${size} h-${size} object-cover flex-shrink-0`} />;
   return (
-    <div className={`w-${size} h-${size} rounded-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center flex-shrink-0`}>
+    <div className={`w-${size} h-${size} rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center flex-shrink-0`}>
       <span className="text-white font-semibold text-xs">{(name ?? "?")[0].toUpperCase()}</span>
     </div>
   );
@@ -117,12 +117,12 @@ export function MessagesClient({ currentUserId, conversations, thread: initialTh
 
         {conversations.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-            <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-3">
-              <MessageSquare className="h-6 w-6 text-blue-400" />
+            <div className="w-14 h-14 rounded-2xl bg-brand-50 flex items-center justify-center mb-3">
+              <MessageSquare className="h-6 w-6 text-brand-400" />
             </div>
             <p className="font-medium text-gray-700">No messages yet</p>
             <p className="text-sm text-gray-500 mt-1">Browse rooms and contact landlords to get started.</p>
-            <Link href="/listings" className="btn-primary mt-4 text-xs">Browse Rooms</Link>
+            <Link href="/listings" className="mt-4 inline-flex items-center px-4 py-2 rounded-xl bg-brand-600 text-white text-xs font-semibold hover:bg-brand-700 transition-colors">Browse Rooms</Link>
           </div>
         ) : (
           <div className="flex-1 overflow-y-auto divide-y divide-gray-50">
@@ -137,7 +137,7 @@ export function MessagesClient({ currentUserId, conversations, thread: initialTh
                   onClick={() => setShowList(false)}
                   className={cn(
                     "flex items-start gap-3 px-4 py-3.5 hover:bg-gray-50 transition-colors",
-                    isActive && "bg-blue-50 hover:bg-blue-50"
+                    isActive && "bg-brand-50 hover:bg-brand-50"
                   )}
                 >
                   <div className="relative">
@@ -157,7 +157,7 @@ export function MessagesClient({ currentUserId, conversations, thread: initialTh
                     </p>
                   </div>
                   {unread > 0 && (
-                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-blue-600 flex items-center justify-center">
+                    <div className="flex-shrink-0 w-5 h-5 rounded-full bg-brand-600 flex items-center justify-center">
                       <span className="text-white text-xs font-bold">{unread}</span>
                     </div>
                   )}
@@ -219,7 +219,7 @@ export function MessagesClient({ currentUserId, conversations, thread: initialTh
                 <button
                   onClick={sendMessage}
                   disabled={!message.trim() || sending}
-                  className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
+                  className="flex items-center gap-1.5 bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors"
                 >
                   <Send className="h-3.5 w-3.5" /> Send
                 </button>
@@ -228,8 +228,8 @@ export function MessagesClient({ currentUserId, conversations, thread: initialTh
           </>
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center text-center p-8 bg-gray-50">
-            <div className="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center mb-4">
-              <MessageSquare className="h-7 w-7 text-blue-400" />
+            <div className="w-16 h-16 rounded-2xl bg-brand-50 flex items-center justify-center mb-4">
+              <MessageSquare className="h-7 w-7 text-brand-400" />
             </div>
             <p className="font-semibold text-gray-700">Select a conversation</p>
             <p className="text-sm text-gray-500 mt-1">Choose a conversation from the list to read your messages.</p>

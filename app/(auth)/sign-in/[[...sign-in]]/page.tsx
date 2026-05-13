@@ -12,14 +12,14 @@ export default function SignInPage() {
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
             <Home className="h-4 w-4 text-white" />
           </div>
-          <span className="text-lg font-bold text-gray-900">NestMate</span>
+          <span className="text-lg font-bold text-gray-900">RoomRent</span>
         </Link>
         <div className="w-full max-w-sm card p-6">
           <h1 className="text-lg font-semibold text-gray-900">Auth not configured</h1>
           <p className="mt-2 text-sm text-gray-500">
             Add valid Clerk keys to .env.local to enable authentication.
           </p>
-          <Link href="/" className="btn-secondary w-full justify-center mt-4">Go home</Link>
+          <Link href="/" className="flex items-center justify-center w-full mt-4 px-4 py-2 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">Go home</Link>
         </div>
       </div>
     );
@@ -43,7 +43,7 @@ export default function SignInPage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
               <Home className="h-4 w-4 text-white" />
             </div>
-            <span className="text-lg font-bold text-white">NestMate</span>
+            <span className="text-lg font-bold text-white">RoomRent</span>
           </Link>
         </div>
         <div className="relative mt-auto space-y-4">
@@ -71,7 +71,7 @@ export default function SignInPage() {
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600">
               <Home className="h-4 w-4 text-white" />
             </div>
-            <span className="text-lg font-bold text-gray-900">NestMate</span>
+            <span className="text-lg font-bold text-gray-900">RoomRent</span>
           </Link>
         </div>
         <SignIn />

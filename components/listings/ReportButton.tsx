@@ -41,12 +41,12 @@ export function ReportButton({ listingId, inline }: { listingId: string; inline?
 
       {open && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-          <div className="glass-card w-full max-w-md p-6 relative">
+          <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-gray-100 p-6 relative">
             <button onClick={() => setOpen(false)} className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-gray-100">
               <X className="h-4 w-4 text-gray-500" />
             </button>
             <h2 className="font-bold text-gray-900 mb-1">Report this listing</h2>
-            <p className="text-sm text-gray-500 mb-4">Help us keep NestMate safe and scam-free.</p>
+            <p className="text-sm text-gray-500 mb-4">Help us keep RoomRent safe and scam-free.</p>
 
             {done ? (
               <p className="text-sm text-green-600 font-medium text-center py-4">Thanks for your report! We will review it shortly.</p>
@@ -67,7 +67,7 @@ export function ReportButton({ listingId, inline }: { listingId: string; inline?
                     className="input-field resize-none" placeholder="Describe what seems wrong..." />
                 </div>
                 <button onClick={submit} disabled={!reason || loading}
-                  className="btn-primary w-full justify-center gap-2 bg-red-600 hover:bg-red-700 focus-visible:outline-red-600">
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 disabled:opacity-50 text-white text-sm font-semibold transition-colors">
                   {loading && <Loader2 className="h-4 w-4 animate-spin" />}
                   Submit Report
                 </button>

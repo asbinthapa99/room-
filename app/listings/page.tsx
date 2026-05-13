@@ -86,7 +86,7 @@ export default async function ListingsPage({ searchParams }: { searchParams: Pro
             </div>
             <p className="font-semibold text-gray-700 text-lg">No rooms found</p>
             <p className="text-sm text-gray-400 mt-1.5">Try adjusting your filters or search terms.</p>
-            <Link href="/listings" className="btn-secondary inline-flex mt-5">Clear filters</Link>
+            <Link href="/listings" className="inline-flex items-center mt-5 px-4 py-2 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">Clear filters</Link>
           </div>
         )}
 

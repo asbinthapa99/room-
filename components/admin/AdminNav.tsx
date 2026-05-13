@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Home, Users, Flag, Settings, ArrowLeft,
+  LayoutDashboard, Home, Users, Flag, ArrowLeft,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -12,7 +12,6 @@ const ADMIN_NAV = [
   { href: "/admin/listings", label: "Listings", icon: Home },
   { href: "/admin/users", label: "Users", icon: Users },
   { href: "/admin/reports", label: "Reports", icon: Flag },
-  { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 export function AdminNav() {

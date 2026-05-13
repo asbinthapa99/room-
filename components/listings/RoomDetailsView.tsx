@@ -66,7 +66,7 @@ export function RoomDetailsView({
           <div className="lg:col-span-2 space-y-6">
             {/* Badges */}
             <div className="flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full font-medium">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-brand-50 text-brand-700 text-sm rounded-full font-medium">
                 <ShieldCheck className="h-3.5 w-3.5" /> Verified
               </span>
               <span className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full font-medium">
@@ -139,8 +139,8 @@ export function RoomDetailsView({
             {/* Info boxes */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-3">
-                <div className="p-2.5 bg-blue-50 rounded-xl">
-                  <Calendar className="h-5 w-5 text-blue-600" />
+                <div className="p-2.5 bg-brand-50 rounded-xl">
+                  <Calendar className="h-5 w-5 text-brand-600" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Available from</p>
@@ -148,8 +148,8 @@ export function RoomDetailsView({
                 </div>
               </div>
               <div className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-3">
-                <div className="p-2.5 bg-blue-50 rounded-xl">
-                  <Clock className="h-5 w-5 text-blue-600" />
+                <div className="p-2.5 bg-brand-50 rounded-xl">
+                  <Clock className="h-5 w-5 text-brand-600" />
                 </div>
                 <div>
                   <p className="text-xs text-gray-500">Minimum stay</p>
@@ -195,7 +195,7 @@ export function RoomDetailsView({
                         className="object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center text-white font-bold">
+                      <div className="w-full h-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-white font-bold">
                         {listing.landlord.name.charAt(0)}
                       </div>
                     )}

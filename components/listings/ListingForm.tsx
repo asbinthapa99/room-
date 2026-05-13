@@ -246,10 +246,12 @@ export function ListingForm({ initialData }: ListingFormProps) {
       )}
 
       <div className="flex gap-3 pt-2">
-        <button type="button" onClick={() => router.back()} className="btn-secondary flex-1">
+        <button type="button" onClick={() => router.back()}
+          className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors">
           Cancel
         </button>
-        <button type="submit" disabled={submitting} className="btn-primary flex-1 gap-2">
+        <button type="submit" disabled={submitting}
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-700 disabled:opacity-50 text-white text-sm font-semibold transition-colors">
           {submitting && <Loader2 className="h-4 w-4 animate-spin" />}
           {initialData?.id ? "Save Changes" : "Submit Listing"}
         </button>

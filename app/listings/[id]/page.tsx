@@ -9,6 +9,9 @@ import { ContactButton } from "@/components/listings/ContactButton";
 import { SaveButton } from "@/components/listings/SaveButton";
 import { ReportButton } from "@/components/listings/ReportButton";
 import { LocationMap } from "@/components/ui/location-map";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 const CITY_COORDINATES: Record<string, { coords: string; label: string }> = {
   london: { coords: "51.5074° N, 0.1278° W", label: "London, UK" },
@@ -50,10 +53,13 @@ export default async function ListingDetailPage({ params }: PageProps) {
     { key: "washing", label: "Washing Machine" },
   ];
 
+  const cityKey = listing.city.toLowerCase();
+  const cityInfo = CITY_COORDINATES[cityKey] ?? { coords: "", label: listing.city };
+
   return (
     <div className="bg-gray-50 min-h-screen">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        <Link href="/listings" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-6">
+        <Link href="/listings" className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 mb-6 transition-colors">
           <ChevronLeft className="h-4 w-4" /> Back to listings
         </Link>
 
@@ -83,12 +89,14 @@ export default async function ListingDetailPage({ params }: PageProps) {
 
         <div className="lg:grid lg:grid-cols-3 lg:gap-8">
           {/* Left — content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-5">
             {/* Badges */}
             <div className="flex flex-wrap gap-2">
-              <span className="badge"><ShieldCheck className="h-3.5 w-3.5 text-blue-500" /> Verified</span>
-              <span className="badge">{listing.roomType === "PRIVATE" ? "Private Room" : "Shared Room"}</span>
-              {listing.billsIncluded && <span className="badge-green">Bills included</span>}
+              <Badge variant="brand">
+                <ShieldCheck className="h-3.5 w-3.5 mr-1" /> Verified
+              </Badge>
+              <Badge>{listing.roomType === "PRIVATE" ? "Private Room" : "Shared Room"}</Badge>
+              {listing.billsIncluded && <Badge variant="green">Bills included</Badge>}
             </div>
 
             {/* Title */}
@@ -104,99 +112,112 @@ export default async function ListingDetailPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* Mobile: price card */}
-            <div className="lg:hidden glass-card p-5 shadow-sm">
-              <div className="flex items-baseline gap-2 mb-4">
-                <span className="text-2xl font-bold text-gray-900">{formatPrice(listing.price, listing.currency)}</span>
-                <span className="text-gray-500 text-sm">/month</span>
-                {listing.billsIncluded && <span className="badge-green text-xs">Bills included</span>}
-              </div>
-              <div className="space-y-2">
-                <ContactButton listingId={listing.id} landlordId={listing.landlord.id} />
-                <SaveButton listingId={listing.id} initialSaved={isSaved} />
-              </div>
-              <div className="mt-4 pt-4 border-t border-gray-100 space-y-2 text-sm">
-                <div className="flex justify-between"><span className="text-gray-500">Available from</span><span className="font-semibold">{formatDate(listing.availableDate)}</span></div>
-                <div className="flex justify-between"><span className="text-gray-500">Room type</span><span className="font-semibold">{listing.roomType === "PRIVATE" ? "Private Room" : "Shared Room"}</span></div>
-              </div>
-            </div>
+            {/* Mobile price card */}
+            <Card className="lg:hidden shadow-sm border-gray-100">
+              <CardContent className="p-5">
+                <div className="flex items-baseline gap-2 mb-4">
+                  <span className="text-2xl font-bold text-gray-900">{formatPrice(listing.price, listing.currency)}</span>
+                  <span className="text-gray-500 text-sm">/month</span>
+                  {listing.billsIncluded && <Badge variant="green" className="text-xs">Bills included</Badge>}
+                </div>
+                <div className="space-y-2">
+                  <ContactButton listingId={listing.id} landlordId={listing.landlord.id} />
+                  <SaveButton listingId={listing.id} initialSaved={isSaved} />
+                </div>
+                <Separator className="my-4" />
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between"><span className="text-gray-500">Available from</span><span className="font-semibold">{formatDate(listing.availableDate)}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-500">Room type</span><span className="font-semibold">{listing.roomType === "PRIVATE" ? "Private Room" : "Shared Room"}</span></div>
+                </div>
+              </CardContent>
+            </Card>
 
-            <hr className="border-gray-200" />
+            <Separator />
 
             {/* About */}
-            <div className="glass-card p-5">
-              <h2 className="text-lg font-bold text-gray-900 mb-3">About this room</h2>
-              <p className="text-gray-600 leading-relaxed text-sm sm:text-base whitespace-pre-line">{listing.description}</p>
-            </div>
+            <Card className="border-gray-100 shadow-sm">
+              <CardContent className="p-5">
+                <h2 className="text-lg font-bold text-gray-900 mb-3">About this room</h2>
+                <p className="text-gray-600 leading-relaxed text-sm sm:text-base whitespace-pre-line">{listing.description}</p>
+              </CardContent>
+            </Card>
 
             {/* Info boxes */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="glass-card p-4 flex items-center gap-3">
-                <div className="p-2.5 bg-brand-50 rounded-xl"><Calendar className="h-5 w-5 text-brand-600" /></div>
-                <div>
-                  <p className="text-xs text-gray-500">Available from</p>
-                  <p className="font-semibold text-gray-900">{formatDate(listing.availableDate)}</p>
-                </div>
-              </div>
-              <div className="glass-card p-4 flex items-center gap-3">
-                <div className="p-2.5 bg-brand-50 rounded-xl"><Clock className="h-5 w-5 text-brand-600" /></div>
-                <div>
-                  <p className="text-xs text-gray-500">Minimum stay</p>
-                  <p className="font-semibold text-gray-900">1 month</p>
-                </div>
-              </div>
+              <Card className="border-gray-100 shadow-sm">
+                <CardContent className="p-4 flex items-center gap-3">
+                  <div className="p-2.5 bg-brand-50 rounded-xl border border-brand-100">
+                    <Calendar className="h-5 w-5 text-brand-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Available from</p>
+                    <p className="font-semibold text-gray-900">{formatDate(listing.availableDate)}</p>
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="border-gray-100 shadow-sm">
+                <CardContent className="p-4 flex items-center gap-3">
+                  <div className="p-2.5 bg-brand-50 rounded-xl border border-brand-100">
+                    <Clock className="h-5 w-5 text-brand-600" />
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">Minimum stay</p>
+                    <p className="font-semibold text-gray-900">1 month</p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Amenities */}
-            <div className="glass-card p-5">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">What this place offers</h2>
-              <div className="grid grid-cols-2 gap-3">
-                {amenities.map(({ key, label }) => {
-                  const Icon = AMENITY_ICONS[key] ?? Wifi;
-                  return (
-                    <div key={key} className="flex items-center gap-2.5 text-sm text-gray-700">
-                      <Icon className="h-4 w-4 text-gray-500 flex-shrink-0" />
-                      {label}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
+            <Card className="border-gray-100 shadow-sm">
+              <CardContent className="p-5">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">What this place offers</h2>
+                <div className="grid grid-cols-2 gap-3">
+                  {amenities.map(({ key, label }) => {
+                    const Icon = AMENITY_ICONS[key] ?? Wifi;
+                    return (
+                      <div key={key} className="flex items-center gap-2.5 text-sm text-gray-700">
+                        <Icon className="h-4 w-4 text-gray-500 flex-shrink-0" />
+                        {label}
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
 
             {/* Location Map */}
-            {(() => {
-              const cityKey = listing.city.toLowerCase();
-              const cityInfo = CITY_COORDINATES[cityKey] ?? { coords: "", label: listing.city };
-              return (
-                <div className="glass-card p-5">
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">Location</h2>
-                  <div className="flex justify-center">
-                    <LocationMap location={cityInfo.label} coordinates={cityInfo.coords} />
-                  </div>
-                  <p className="text-xs text-gray-400 text-center mt-8">
-                    Exact address shared after booking confirmation
-                  </p>
+            <Card className="border-gray-100 shadow-sm">
+              <CardContent className="p-5">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">Location</h2>
+                <div className="flex justify-center">
+                  <LocationMap location={cityInfo.label} coordinates={cityInfo.coords} />
                 </div>
-              );
-            })()}
+                <p className="text-xs text-gray-400 text-center mt-8">
+                  Exact address shared after booking confirmation
+                </p>
+              </CardContent>
+            </Card>
 
             {/* Landlord */}
-            <div className="glass-card p-5">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">About the landlord</h2>
-              <div className="flex items-center gap-4">
-                {listing.landlord.avatar ? (
-                  <Image src={listing.landlord.avatar} alt="" width={56} height={56} className="rounded-full ring-2 ring-white shadow" />
-                ) : (
-                  <div className="h-14 w-14 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow">
-                    <span className="text-xl font-bold text-white">{(listing.landlord.name ?? "L")[0].toUpperCase()}</span>
+            <Card className="border-gray-100 shadow-sm">
+              <CardContent className="p-5">
+                <h2 className="text-lg font-bold text-gray-900 mb-4">About the landlord</h2>
+                <div className="flex items-center gap-4">
+                  {listing.landlord.avatar ? (
+                    <Image src={listing.landlord.avatar} alt="" width={56} height={56} className="rounded-full ring-2 ring-white shadow" />
+                  ) : (
+                    <div className="h-14 w-14 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow">
+                      <span className="text-xl font-bold text-white">{(listing.landlord.name ?? "L")[0].toUpperCase()}</span>
+                    </div>
+                  )}
+                  <div>
+                    <p className="font-semibold text-gray-900">{listing.landlord.name ?? "Landlord"}</p>
+                    <p className="text-sm text-gray-500">Member since {formatDate(listing.landlord.createdAt)}</p>
                   </div>
-                )}
-                <div>
-                  <p className="font-semibold text-gray-900">{listing.landlord.name ?? "Landlord"}</p>
-                  <p className="text-sm text-gray-500">Member since {formatDate(listing.landlord.createdAt)}</p>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
 
             {/* Report */}
             <div className="pb-8">
@@ -204,44 +225,46 @@ export default async function ListingDetailPage({ params }: PageProps) {
             </div>
           </div>
 
-          {/* Right — sticky price card (desktop only) */}
+          {/* Right — sticky price card (desktop) */}
           <div className="hidden lg:block lg:col-span-1">
             <div className="sticky top-24">
-              <div className="glass-card p-6 shadow-md">
-                <div className="flex items-baseline gap-2 mb-2">
-                  <span className="text-3xl font-bold text-gray-900">{formatPrice(listing.price, listing.currency)}</span>
-                  <span className="text-gray-500 text-sm">/month</span>
-                </div>
-                {listing.billsIncluded && <span className="badge-green mb-4 inline-flex">Bills included</span>}
-
-                <div className="mt-4 space-y-3">
-                  <ContactButton listingId={listing.id} landlordId={listing.landlord.id} />
-                  <SaveButton listingId={listing.id} initialSaved={isSaved} />
-                </div>
-
-                <hr className="my-5 border-gray-100" />
-
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Available from</span>
-                    <span className="font-semibold text-gray-900">{formatDate(listing.availableDate)}</span>
+              <Card className="shadow-lg border-gray-100">
+                <CardContent className="p-6">
+                  <div className="flex items-baseline gap-2 mb-2">
+                    <span className="text-3xl font-bold text-gray-900">{formatPrice(listing.price, listing.currency)}</span>
+                    <span className="text-gray-500 text-sm">/month</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Minimum stay</span>
-                    <span className="font-semibold text-gray-900">1 month</span>
+                  {listing.billsIncluded && <Badge variant="green" className="mb-4">Bills included</Badge>}
+
+                  <div className="mt-4 space-y-3">
+                    <ContactButton listingId={listing.id} landlordId={listing.landlord.id} />
+                    <SaveButton listingId={listing.id} initialSaved={isSaved} />
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Room type</span>
-                    <span className="font-semibold text-gray-900">{listing.roomType === "PRIVATE" ? "Private Room" : "Shared Room"}</span>
-                  </div>
-                  {listing.genderPref !== "ANY" && (
+
+                  <Separator className="my-5" />
+
+                  <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-500">Gender pref.</span>
-                      <span className="font-semibold text-gray-900">{listing.genderPref === "MALE" ? "Male only" : "Female only"}</span>
+                      <span className="text-gray-500">Available from</span>
+                      <span className="font-semibold text-gray-900">{formatDate(listing.availableDate)}</span>
                     </div>
-                  )}
-                </div>
-              </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Minimum stay</span>
+                      <span className="font-semibold text-gray-900">1 month</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Room type</span>
+                      <span className="font-semibold text-gray-900">{listing.roomType === "PRIVATE" ? "Private Room" : "Shared Room"}</span>
+                    </div>
+                    {listing.genderPref !== "ANY" && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Gender pref.</span>
+                        <span className="font-semibold text-gray-900">{listing.genderPref === "MALE" ? "Male only" : "Female only"}</span>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
               <p className="text-xs text-center text-gray-400 mt-3">
                 Something wrong? <ReportButton listingId={listing.id} inline />
               </p>

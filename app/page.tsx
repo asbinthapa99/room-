@@ -301,7 +301,7 @@ export default async function HomePage() {
               Availability
             </p>
             <h2 className="text-2xl md:text-4xl font-bold tracking-tight">
-              NestMate is built for major student destinations
+              RoomRent is built for major student destinations
             </h2>
             <p className="mt-4 max-w-xl text-sm md:text-base leading-7 text-gray-600">
               Search, list, and manage rooms across the UK, Australia, Canada, and the US from one marketplace.
@@ -390,7 +390,7 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-8 text-center">
           <p className="text-sm font-semibold text-brand-600 uppercase tracking-widest mb-3">Reviews</p>
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">What tenants say</h2>
-          <p className="text-gray-500 mt-2">Real stories from people who found their home through NestMate</p>
+          <p className="text-gray-500 mt-2">Real stories from people who found their home through RoomRent</p>
         </div>
 
         <Marquee pauseOnHover className="[--duration:35s]">
@@ -426,7 +426,7 @@ export default async function HomePage() {
           <Accordion type="single" collapsible className="w-full">
             {[
               {
-                q: "Is NestMate free to use?",
+                q: "Is RoomRent free to use?",
                 a: "Yes — browsing and messaging landlords is completely free for tenants. Landlords can also list their rooms at no cost. We believe finding a home shouldn't come with extra fees.",
               },
               {
@@ -439,7 +439,7 @@ export default async function HomePage() {
               },
               {
                 q: "Which cities are available?",
-                a: "NestMate supports the UK, Australia, Canada, and the US, with city coverage expanding around major student and newcomer destinations.",
+                a: "RoomRent supports the UK, Australia, Canada, and the US, with city coverage expanding around major student and newcomer destinations.",
               },
               {
                 q: "How do I post a room?",

@@ -8,12 +8,12 @@ import { AlertProvider } from "@/components/providers/alert-provider";
 import { isClerkConfigured } from "../lib/clerk-config";
 
 export const metadata: Metadata = {
-  title: "NestMate — Trusted Rooms for Students & Newcomers",
+  title: "RoomRent — Trusted Rooms for Students & Newcomers",
   description:
     "Find trusted rooms in London and Toronto. Verified listings for students and newcomers moving abroad.",
   keywords: ["room rental", "student housing", "London rooms", "Toronto rooms", "international students"],
   openGraph: {
-    title: "NestMate",
+    title: "RoomRent",
     description: "Find trusted rooms in London and Toronto.",
     type: "website",
   },

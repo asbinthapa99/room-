@@ -6,7 +6,7 @@ export default function DashboardLoading() {
         <div className="h-4 w-48 bg-gray-100 rounded mb-8" />
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
           {[0, 1, 2].map((i) => (
-            <div key={i} className="glass-card p-5 flex items-center gap-4">
+            <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
               <div className="h-11 w-11 rounded-xl bg-gray-200" />
               <div className="space-y-2">
                 <div className="h-6 w-8 bg-gray-200 rounded" />
@@ -17,7 +17,7 @@ export default function DashboardLoading() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="glass-card p-4 h-16 bg-gray-100" />
+            <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 h-16 bg-gray-100" />
           ))}
         </div>
       </div>
