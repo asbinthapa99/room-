@@ -23,8 +23,8 @@ function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Navbar />
-      {/* pb-24 on mobile makes room for the bottom nav bar */}
-      <main className="min-h-screen pb-24 md:pb-0">{children}</main>
+      {/* pt-16 offsets the fixed navbar; pb-24 on mobile clears the bottom nav */}
+      <main className="min-h-screen pt-16 pb-28 md:pb-0">{children}</main>
       <Footer />
       <MobileBottomNav />
     </>

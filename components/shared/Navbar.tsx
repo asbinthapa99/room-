@@ -60,11 +60,11 @@ export function Navbar() {
           <div className="flex items-center justify-between h-16">
 
             {/* ── Logo ── */}
-            <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-              <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 shadow-md shadow-brand-600/30 group-hover:shadow-lg group-hover:shadow-brand-600/40 transition-shadow">
-                <Home className="h-4.5 w-4.5 text-white" />
+            <Link href="/" className="flex items-center gap-2 shrink-0 group">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 shadow-sm shadow-brand-600/30 group-hover:shadow-md group-hover:shadow-brand-600/40 transition-shadow">
+                <Home className="h-4 w-4 text-white" />
               </div>
-              <span className="text-base font-black tracking-tight text-gray-900">
+              <span className="text-sm sm:text-base font-black tracking-tight text-gray-900">
                 Room<span className="text-brand-600">Rent</span>
               </span>
             </Link>
@@ -281,8 +281,6 @@ export function Navbar() {
         )}
       </nav>
 
-      {/* Spacer so page content isn't hidden under fixed nav */}
-      <div className="h-16" />
     </>
   );
 }

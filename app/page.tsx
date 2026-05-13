@@ -129,6 +129,19 @@ async function getCityCounts() {
   }
 }
 
+const TRUSTED_LOGOS = [
+  { name: "University of Toronto", flag: "🇨🇦" },
+  { name: "UCL London", flag: "🇬🇧" },
+  { name: "Ryerson University", flag: "🇨🇦" },
+  { name: "King's College London", flag: "🇬🇧" },
+  { name: "York University", flag: "🇨🇦" },
+  { name: "Imperial College", flag: "🇬🇧" },
+  { name: "Humber College", flag: "🇨🇦" },
+  { name: "Queen Mary University", flag: "🇬🇧" },
+  { name: "Seneca College", flag: "🇨🇦" },
+  { name: "London Metropolitan", flag: "🇬🇧" },
+];
+
 const POPULAR_CITIES = [
   {
     city: "london",
@@ -199,6 +212,26 @@ export default async function HomePage() {
 
       {/* ─── Cinematic Hero ─── */}
       <HeroCinematic />
+
+      {/* ─── Trusted By ─── */}
+      <section className="py-8 md:py-10 border-b border-gray-100 overflow-hidden bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mb-5 text-center">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest">
+            Trusted by students from
+          </p>
+        </div>
+        <Marquee pauseOnHover className="[--duration:30s] [--gap:3rem]">
+          {TRUSTED_LOGOS.map((logo) => (
+            <div
+              key={logo.name}
+              className="mx-6 flex items-center gap-2 opacity-40 hover:opacity-70 transition-opacity select-none"
+            >
+              <span className="text-2xl">{logo.flag}</span>
+              <span className="text-sm font-bold text-gray-700 whitespace-nowrap">{logo.name}</span>
+            </div>
+          ))}
+        </Marquee>
+      </section>
 
       {/* ─── City Explorer ─── */}
       <section className="py-16 md:py-24 bg-white">

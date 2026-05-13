@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Shield, Zap, Star, ChevronDown } from "lucide-react";
 import { HeroSearch } from "@/components/shared/HeroSearch";
+import { Sparkles } from "@/components/ui/sparkles";
 
 const CITY_SLIDES = [
   {
@@ -45,7 +46,7 @@ export function HeroCinematic() {
   const next = CITY_SLIDES[(slide + 1) % CITY_SLIDES.length];
 
   return (
-    <section className="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden">
+    <section className="relative min-h-[100svh] flex flex-col items-center justify-center overflow-hidden -mt-16">
 
       {/* Background images — crossfade */}
       {CITY_SLIDES.map((s, i) => (
@@ -65,8 +66,18 @@ export function HeroCinematic() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80 z-10" />
       <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-transparent z-10" />
 
-      {/* Content */}
-      <div className="relative z-20 w-full max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center gap-7 pt-20">
+      {/* Sparkles over hero */}
+      <Sparkles
+        className="absolute inset-0 w-full h-full z-10 pointer-events-none"
+        density={60}
+        size={0.7}
+        speed={0.4}
+        opacity={0.35}
+        color="#ffffff"
+      />
+
+      {/* Content — pt-20 clears fixed navbar, pb-32 clears mobile bottom nav */}
+      <div className="relative z-20 w-full max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center text-center gap-5 md:gap-7 pt-20 pb-32 md:pb-12">
 
         {/* Trust badge */}
         <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md border border-white/25 px-4 py-2 text-xs font-semibold text-white/90 uppercase tracking-widest">
@@ -98,12 +109,12 @@ export function HeroCinematic() {
         {/* Search bar */}
         <HeroSearch />
 
-        {/* Trust stats */}
-        <div className="flex flex-wrap items-center justify-center gap-6 pt-2">
+        {/* Trust stats — horizontal scroll on mobile */}
+        <div className="flex items-center gap-4 md:gap-6 overflow-x-auto w-full justify-start md:justify-center px-1 pb-1 scrollbar-hide">
           {TRUST_STATS.map(({ icon: Icon, value, label }) => (
-            <div key={label} className="flex items-center gap-2.5">
-              <div className="h-9 w-9 rounded-xl bg-white/10 backdrop-blur-sm border border-white/15 flex items-center justify-center">
-                <Icon className="h-4 w-4 text-brand-300" />
+            <div key={label} className="flex items-center gap-2.5 shrink-0">
+              <div className="h-8 w-8 md:h-9 md:w-9 rounded-xl bg-white/10 backdrop-blur-sm border border-white/15 flex items-center justify-center">
+                <Icon className="h-3.5 w-3.5 md:h-4 md:w-4 text-brand-300" />
               </div>
               <div className="text-left">
                 <p className="text-white font-bold text-sm leading-none">{value}</p>
@@ -114,7 +125,7 @@ export function HeroCinematic() {
         </div>
 
         {/* City dot indicators */}
-        <div className="flex gap-2 pt-1">
+        <div className="flex gap-2">
           {CITY_SLIDES.map((s, i) => (
             <button
               key={s.city}
@@ -125,8 +136,8 @@ export function HeroCinematic() {
         </div>
       </div>
 
-      {/* Scroll hint */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-1.5 animate-bounce">
+      {/* Scroll hint — hidden on mobile where bottom nav shows */}
+      <div className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex-col items-center gap-1.5 animate-bounce">
         <p className="text-white/40 text-xs font-medium uppercase tracking-widest">Scroll</p>
         <ChevronDown className="h-4 w-4 text-white/40" />
       </div>

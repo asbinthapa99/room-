@@ -49,13 +49,13 @@ export function HeroSearch() {
 
   return (
     <div className="w-full max-w-2xl relative" ref={containerRef}>
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl shadow-float overflow-visible p-1.5 gap-1.5">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center bg-white rounded-2xl shadow-float overflow-visible p-1.5 gap-0 sm:gap-1.5">
 
         {/* City picker */}
         <div className="relative flex-1">
           <button
             onClick={() => { setCityOpen(!cityOpen); setTypeOpen(false); }}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors text-left"
+            className="w-full flex items-center gap-3 px-4 py-2.5 sm:py-3 rounded-xl hover:bg-gray-50 transition-colors text-left"
           >
             <MapPin className="h-4 w-4 text-brand-500 shrink-0" />
             <div className="flex-1 min-w-0">
@@ -99,14 +99,15 @@ export function HeroSearch() {
           )}
         </div>
 
-        {/* Divider */}
+        {/* Divider — horizontal on mobile, vertical on desktop */}
+        <div className="block sm:hidden h-px bg-gray-100 mx-3" />
         <div className="hidden sm:block w-px h-10 bg-gray-200 self-center" />
 
         {/* Room type picker */}
         <div className="relative flex-1">
           <button
             onClick={() => { setTypeOpen(!typeOpen); setCityOpen(false); }}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors text-left"
+            className="w-full flex items-center gap-3 px-4 py-2.5 sm:py-3 rounded-xl hover:bg-gray-50 transition-colors text-left"
           >
             <Home className="h-4 w-4 text-brand-500 shrink-0" />
             <div className="flex-1 min-w-0">
@@ -147,8 +148,8 @@ export function HeroSearch() {
         </button>
       </div>
 
-      {/* Quick filters */}
-      <div className="flex items-center gap-2 mt-3 justify-center flex-wrap">
+      {/* Quick filters — scrollable row on mobile */}
+      <div className="flex items-center gap-2 mt-3 overflow-x-auto scrollbar-hide pb-0.5">
         {[
           { label: "🇬🇧 London", city: "london", type: "" },
           { label: "🇨🇦 Toronto", city: "toronto", type: "" },
